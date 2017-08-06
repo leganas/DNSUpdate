@@ -1,6 +1,7 @@
 package com.leganas.dnsupdate.Assets;
 
 import com.google.gson.*;
+import com.leganas.dnsupdate.Setting;
 
 import java.lang.reflect.Type;
 
@@ -8,9 +9,9 @@ import java.lang.reflect.Type;
  * Created by AndreyLS on 03.08.2017.
  */
 public class Account {
-    String login;
-    String password;
-    boolean check_flag;
+    String login = "";
+    String password = "";
+    boolean check_flag = false;
 
     public Account(String login, String password, boolean check_flag) {
         this.login = login;
@@ -18,13 +19,21 @@ public class Account {
         this.check_flag = check_flag;
     }
 
+    public Account() {
+
+    }
+
     public static class accountConverter implements JsonSerializer<Account>, JsonDeserializer<Account> {
         @Override
         public Account deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
             JsonObject object = jsonElement.getAsJsonObject();
+            // Лень создавать отдельно для этого чекбокса реализацию записи в файл
+            // заебеним всё сюда
+            Boolean globalAuto_check_flag = object.get("globalAuto_check_flag").getAsBoolean();
+            Setting.globalAuto_check_flag = globalAuto_check_flag;
             String login = object.get("login").getAsString();
             String password = object.get("password").getAsString();
-            Boolean check_flag = object.get("flag").getAsBoolean();
+            Boolean check_flag = object.get("check_flag").getAsBoolean();
             return new Account(login,password,check_flag);
         }
 
@@ -33,7 +42,8 @@ public class Account {
             JsonObject object = new JsonObject();
             object.addProperty("login", Account.getLogin());
             object.addProperty("password", Account.getPassword());
-            object.addProperty("flag", Account.isCheck_flag());
+            object.addProperty("check_flag", Account.isCheck_flag());
+            object.addProperty("globalAuto_check_flag", Setting.globalAuto_check_flag);
             return object;
         }
     }
