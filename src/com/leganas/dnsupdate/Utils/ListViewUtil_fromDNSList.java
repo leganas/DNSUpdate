@@ -45,13 +45,13 @@ public class ListViewUtil_fromDNSList{
         listView.setStyle("-fx-border-width:3pt; -fx-font:bold 10pt Georgia;");
         // -fx-border-color:navy
         listView.setPrefSize(200, 512);
-        listView.setTooltip(new Tooltip("Список активных DNS записей"));
+        listView.setTooltip(new Tooltip("Список активных DNS имён"));
         listView.setOrientation(Orientation.VERTICAL);
 
         listView.setCellFactory(new Callback<ListView<DNS>, ListCell<DNS>>() {
             public ListCell<DNS> call(ListView<DNS> param) {
                 try {
-                    Parent parent = FXMLLoader.load(getClass().getResource("../resources/listcellDNS.fxml"));
+                    Parent parent = FXMLLoader.load(getClass().getResource("/com/leganas/dnsupdate/resources/listcellDNS.fxml"));
                     Button btn = (Button) parent.lookup("#dns_name");
 
                     btn.setEffect(effect);
@@ -59,7 +59,7 @@ public class ListViewUtil_fromDNSList{
                     btn.setPrefSize(170, 50);
                     btn.setWrapText(true);
 
-                    CheckBox chbox = (CheckBox) parent.lookup("#chbox");
+                    CheckBox chbox = (CheckBox) parent.lookup("#check");
 
                     final ListCell<DNS> cell = new ListCell<DNS>(){
                         @Override
@@ -67,16 +67,23 @@ public class ListViewUtil_fromDNSList{
                             super.updateItem(item, empty);
                             if (item != null) {
                                 btn.setText(item.getName());
+                                chbox.setSelected(item.getFlag_to_update());
                                 btn.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {
-                                        System.out.println("Click to " + item.getName());
+//                                        System.out.println("Click to " + item.getName());
                                         callback.initRecordListFromDNS(item);
+                                    }
+                                });
+                                chbox.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        item.setFlag_to_update(chbox.isSelected());
                                     }
                                 });
                                 try {
                                     Tooltip tt = new Tooltip();
-                                    Parent ttP = FXMLLoader.load(getClass().getResource("../resources/tooltip.fxml"));
+                                    Parent ttP = FXMLLoader.load(getClass().getResource("/com/leganas/dnsupdate/resources/tooltip.fxml"));
                                     tt.setGraphic(ttP);
 
                                     Label lab = (Label) ttP.lookup("#labelTT");

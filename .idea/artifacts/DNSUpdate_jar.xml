@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/DNSUpdate_jar</output-path>
     <root id="archive" name="DNSUpdate.jar">
       <element id="module-output" name="DNSUpdate" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.1/gson-2.8.1.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

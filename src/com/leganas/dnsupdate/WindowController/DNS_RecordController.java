@@ -8,10 +8,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
 
+import static com.leganas.dnsupdate.Setting.loadDNSList;
+import static com.leganas.dnsupdate.Setting.saveDNSList;
 import static com.leganas.dnsupdate.Utils.ListViewUtil_fromDNSList.ArrayListDNS_TO_ObservaleList;
 import static com.leganas.dnsupdate.Utils.ListViewUtil_fromDNSList.initListViewDNS;
 import static com.leganas.dnsupdate.Utils.ListViewUtil_fromDNSRecord.ArrayListDNSRecord_TO_ObservaleList;
@@ -25,10 +28,13 @@ public class DNS_RecordController {
     private Stage mainStage;
 
     public void click_cancel(ActionEvent actionEvent) {
+        loadDNSList();
+        ((Stage)((Node)actionEvent.getSource()).getScene().getWindow()).close();
     }
 
     public void click_save(ActionEvent actionEvent) {
-        System.out.println("Save");
+        saveDNSList();
+        ((Stage)((Node)actionEvent.getSource()).getScene().getWindow()).close();
     }
 
     public void click_help(ActionEvent actionEvent) {
@@ -50,7 +56,7 @@ public class DNS_RecordController {
 
     public void initStage(){
         initDNSList();
-        initRecordListFromDNS(Setting.dnsList.getList().get(0));
+        if (Setting.dnsList.getList().size() > 0) initRecordListFromDNS(Setting.dnsList.getList().get(0));
     }
 
     public void initDNSList(){

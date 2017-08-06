@@ -6,7 +6,6 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leganas.dnsupdate.WindowController.LoginController">
    <children>
       <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -30,7 +29,7 @@
                   <Insets left="10.0" top="15.0" />
                </VBox.margin>
             </Label>
-            <TextField fx:id="password" />
+            <PasswordField fx:id="password" />
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
                   <Button fx:id="bt_login" defaultButton="true" mnemonicParsing="false" onAction="#click_login" prefWidth="100.0" text="Сохранить">

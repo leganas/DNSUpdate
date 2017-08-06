@@ -7,6 +7,7 @@ import com.leganas.dnsupdate.Assets.Account;
 import com.leganas.dnsupdate.Assets.DNS;
 import com.leganas.dnsupdate.Assets.DNSList;
 import com.leganas.dnsupdate.Utils.ReadWrite;
+import javafx.scene.control.Button;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 public class Setting {
     public static Account account;
     public static DNSList dnsList;
+    public static Button set_ip;
+    public static boolean globalAuto_check_flag = true;
 
     public static void loadDNSList(){
         GsonBuilder builder = new GsonBuilder();
@@ -46,16 +49,24 @@ public class Setting {
 
     public static void loadAccount(){
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(DNS.class, new DNS.DNSConverter());
+        builder.registerTypeAdapter(Account.class, new Account.accountConverter());
         Gson gson = builder.create();
+        String newJson2 = null;
         try {
-            String newJson2 = ReadWrite.read("account.json");
-            Setting.account = gson.fromJson(newJson2,Account.class);
+            newJson2 = ReadWrite.read("account.json");
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
+        Setting.account = gson.fromJson(newJson2,Account.class);
+        if (Setting.account == null) Setting.account = new Account();
+    }
 
+    public static void saveAccount(){
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Account.class, new Account.accountConverter());
+        Gson gson = builder.create();
+        String JsonTest = gson.toJson(Setting.account);
+        System.out.println(JsonTest);
+        ReadWrite.writeJson("account.json",JsonTest);
     }
 }

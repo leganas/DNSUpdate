@@ -33,13 +33,13 @@ public class ListViewUtil_fromDNSRecord {
     public static void initListViewDNSRecord(ListView<DNSRecord> listView, ObservableList<DNSRecord> list){
         if (list == null) return;
         listView.setItems(list);
-        listView.setTooltip(new Tooltip("Список активных DNSRecord записей"));
+        listView.setTooltip(new Tooltip("Список активных записей"));
         listView.setOrientation(Orientation.VERTICAL);
 
         listView.setCellFactory(new Callback<ListView<DNSRecord>, ListCell<DNSRecord>>() {
             public ListCell<DNSRecord> call(ListView<DNSRecord> param) {
                 try {
-                    Parent parent = FXMLLoader.load(getClass().getResource("../resources/listcellDNSRecord.fxml"));
+                    Parent parent = FXMLLoader.load(getClass().getResource("/com/leganas/dnsupdate/resources/listcellDNSRecord.fxml"));
                     TextField id = (TextField) parent.lookup("#id");
                     TextField value = (TextField) parent.lookup("#value");
                     TextField set_value = (TextField) parent.lookup("#set_value");
@@ -60,6 +60,13 @@ public class ListViewUtil_fromDNSRecord {
                                 id.setText(item.getId());
                                 value.setText(item.getValue());
                                 chbox.setSelected(item.isFlag_to_update());
+                                chbox.setOnAction(new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent event) {
+                                        item.setFlag_to_update(chbox.isSelected());
+                                    }
+                                });
+
                                 comboBox.setOnAction(new EventHandler<ActionEvent>() {
                                     @Override
                                     public void handle(ActionEvent event) {

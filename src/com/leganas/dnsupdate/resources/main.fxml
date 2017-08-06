@@ -44,9 +44,9 @@
                <children>
                   <VBox prefHeight="200.0" prefWidth="300.0">
                      <children>
-                        <Label fx:id="label_login" prefHeight="25.0" text="Авторизация LOGIN :" />
-                        <Label fx:id="label_dns" prefHeight="25.0" text="DNS имена :" />
-                        <Label fx:id="label_records" text="Выбрано записей" />
+                        <Label fx:id="label_login" prefHeight="25.0" text="Авторизация LOGIN : " />
+                        <Label fx:id="label_dns" prefHeight="25.0" text="Активные DNS имена : " />
+                        <Label fx:id="label_records" text="Количество записей : " />
                         <Label prefHeight="25.0" text="Статус синхронизации" />
                      </children>
                   </VBox>
@@ -54,14 +54,14 @@
                      <children>
                         <Button fx:id="bt1" mnemonicParsing="false" onAction="#click_login" prefHeight="25.0" prefWidth="100.0" text="Авторизация" />
                         <Button fx:id="bt2" mnemonicParsing="false" onAction="#click_dns" prefHeight="45.0" prefWidth="100.0" text="Настройка списка DNS" textAlignment="CENTER" wrapText="true" />
-                        <Label fx:id="status" prefHeight="25.0" prefWidth="100.0" text="Статус" textAlignment="CENTER" />
+                        <Label fx:id="statuss" prefHeight="25.0" prefWidth="100.0" text="" textAlignment="CENTER" />
                      </children>
                   </VBox>
                </children>
             </HBox>
             <HBox prefHeight="30.0" prefWidth="400.0">
                <children>
-                  <CheckBox fx:id="checkBox" mnemonicParsing="false" text="Обновлять автоматически">
+                  <CheckBox fx:id="checkBox" mnemonicParsing="false" selected="true" text="Обновлять автоматически">
                      <padding>
                         <Insets right="30.0" />
                      </padding>

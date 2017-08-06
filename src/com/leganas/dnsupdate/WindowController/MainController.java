@@ -15,6 +15,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.web.WebEngine;
@@ -52,6 +53,41 @@ public class MainController {
 
     WebEngine webEngine;
 
+    @FXML
+    Label label_login;
+
+    @FXML
+    Label label_dns;
+
+    @FXML
+    Label label_records;
+
+    @FXML
+    Label statuss;
+
+    @FXML
+    CheckBox checkBox;
+
+    public void refrashUI(){
+        checkBox.setSelected(Setting.globalAuto_check_flag);
+        if (Setting.account != null) {
+            label_login.setText("Авторизация LOGIN : "+Setting.account.getLogin());
+        }
+        if (Setting.dnsList != null) {
+            if (Setting.dnsList.getList() != null) {
+                String str = "Активные DNS имена : ";
+                int countRecords=0;
+                for (int i=0;i<Setting.dnsList.getList().size();i++) {
+                    str = str + Setting.dnsList.getList().get(i).getName()+"; ";
+                    for (int z=0;z<Setting.dnsList.getList().get(i).getDnsRecords().size();z++){
+                        countRecords++;
+                    }
+                }
+                label_dns.setText(str);
+                label_records.setText("Количество записей : "+countRecords);
+            }
+        }
+    }
 
 
     public DNSList currentDNSList = new DNSList();
@@ -103,6 +139,7 @@ public class MainController {
 
     /**Метод отрабатывающий последовательность действий после каждой полностью загруженной сраницы*/
     private void succeeded_run() {
+        refrashUI();
         reload_count++;
 //        System.out.println("Загрезка страницы завершена, текущий статус : " + webEngine.getLocation());
 //        System.out.println("Всего было сработок : " + reload_count + " status : " + status + " : ");
@@ -120,6 +157,9 @@ public class MainController {
             } else {
                 // вывести ошибку
                 System.out.println("Ошибка авторизации : " + webEngine.getLocation());
+                label_login.setText("Авторизация LOGIN : " + Setting.account.getLogin() + " ОШИБКА");
+                statuss.setText("ОШИБКА");
+
                 status = ServerServiceWindow.Status.finish;
             }
         } else
@@ -172,6 +212,7 @@ public class MainController {
 
         if (status == ServerServiceWindow.Status.finish) {
             if (lastStatus != status)  System.out.println("Обработка завершена");
+            statuss.setText("АКТУАЛЬНО");
             lastStatus = status;
             reload_count = 0;
         }
@@ -332,9 +373,9 @@ public class MainController {
                 // Ищем все элементы <INPUT> получаем на выходе HTMLCollection
                 JSObject jsObject = (JSObject) webEngine.executeScript("document.getElementsByClassName('input_text')");
                 // получаем 0й элемент коллекции это наше поле логина
-                ((JSObject) jsObject.getSlot(0)).setMember("value","leganas@gmail.com");
+                if (Setting.account != null) ((JSObject) jsObject.getSlot(0)).setMember("value",Setting.account.getLogin());
                 // получаем 2й элемент коллекции это наш пароль
-                ((JSObject) jsObject.getSlot(1)).setMember("value","kj4cuetd");
+                if (Setting.account != null) ((JSObject) jsObject.getSlot(1)).setMember("value",Setting.account.getPassword());
                 // Находим форму и выполняем JavaScript функцию submit()
                 JSObject form = (JSObject) webEngine.executeScript("document.getElementById(\"userlogin\")");
                 form.call("submit");
@@ -442,6 +483,8 @@ public class MainController {
     public void setMainStage(Stage stage){
         this.mainStage = stage;
         ip.setText(IPAddres);
+        Setting.set_ip = bt_setip;
+        refrashUI();
     }
 
     public static String getCurrentIP() {
@@ -511,7 +554,7 @@ public class MainController {
 
     public void click_login(ActionEvent actionEvent) throws IOException {
         Parent parent;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../resources/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/leganas/dnsupdate/resources/login.fxml"));
         parent = (Parent) loader.load();
         LoginController loginController = loader.getController();
 
@@ -529,7 +572,7 @@ public class MainController {
 
     public void click_dns(ActionEvent actionEvent) throws IOException {
         Parent parent;
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../resources/dns_and_records.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/leganas/dnsupdate/resources/dns_and_records.fxml"));
         parent = (Parent) loader.load();
         DNS_RecordController controller= loader.getController();
 

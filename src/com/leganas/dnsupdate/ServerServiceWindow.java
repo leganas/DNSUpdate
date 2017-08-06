@@ -1,9 +1,11 @@
 package com.leganas.dnsupdate;
 
+import com.leganas.dnsupdate.Assets.Account;
 import com.leganas.dnsupdate.Assets.DNSList;
 import com.leganas.dnsupdate.WindowController.MainController;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -39,7 +41,8 @@ public class ServerServiceWindow extends Application {
         run_dns_editor_request,
         /**Фаза посылки запроса на открытие окна и заполнения данными нужных записей*/
         editdns,
-        getRecords, last, procces, /**Все задачи завершены*/
+        getRecords, last, procces,
+        /**Все задачи завершены*/
         finish
     }
 
@@ -66,6 +69,7 @@ public class ServerServiceWindow extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.stage = primaryStage;
         Setting.dnsList = new DNSList();
+        Setting.account = new Account();
 
         IPAddres = MainController.getCurrentIP();
 
@@ -83,8 +87,16 @@ public class ServerServiceWindow extends Application {
 //        ReadWrite.writeJson("account.json",JsonTest);
 
 
-        Setting.loadAccount();
-        Setting.loadDNSList();
+        try {
+            Setting.loadAccount();
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
+        try {
+            Setting.loadDNSList();
+        } catch (Exception e) {
+//            e.printStackTrace();
+        }
 
         if ("Windows XP".equals(System.getProperty("os.name"))){
             ABS_PATH_TO_JFXWEBKIT_DLL = System.getProperty("user.dir");
@@ -121,6 +133,17 @@ public class ServerServiceWindow extends Application {
         stage.setScene(new Scene(root, 400, 200));
         stage.setResizable(false);
         mainController.setMainStage(stage);
+
+        CheckBox checkBox = (CheckBox) root.lookup("#checkBox");
+
+        checkBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Setting.globalAuto_check_flag = checkBox.isSelected();
+                Setting.saveAccount();
+            }
+        });
+
         stage.show();
     }
 
@@ -214,10 +237,7 @@ public class ServerServiceWindow extends Application {
                     new TimerTask() {
                         @Override
                         public void run() {
-                            CheckBox checkBox = (CheckBox) root.lookup("#checkBox");
-
-
-                            if (checkBox.isSelected()) mainController.setCurrentIP(mainController.getCurrentIP());
+                            if (Setting.globalAuto_check_flag && (status == Status.finish || status == Status.login_request)) mainController.setCurrentIP(mainController.getCurrentIP());
 
                             javax.swing.SwingUtilities.invokeLater(() ->
                                     trayIcon.displayMessage(
