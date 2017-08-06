@@ -1,4 +1,4 @@
-package com.leganas.dnsupdate; /**
+package com.leganas.dnsupdate.Utils; /**
  * Created by AndreyLS on 03.08.2017.
  */
 import java.io.*;

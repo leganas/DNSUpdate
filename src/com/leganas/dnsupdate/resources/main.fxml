@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leganas.dnsupdate.WindowController.MainController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Файл">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#click_menu_exit" text="Выход" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Настройки">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#click_login" text="Авторизация" />
+                        <MenuItem mnemonicParsing="false" onAction="#click_dns" text="DNS имена" />
+                        <MenuItem mnemonicParsing="false" onAction="#click_dns" text="Записи" />
+                        <MenuItem mnemonicParsing="false" onAction="#click_setting" text="Настройки программы" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Помощь">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#click_about" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox prefHeight="25.0" prefWidth="400.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="68.0" text="IP Адресс" />
+                  <Label fx:id="ip" text="внешний" />
+               </children>
+            </HBox>
+            <HBox prefHeight="100.0" prefWidth="400.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="300.0">
+                     <children>
+                        <Label fx:id="label_login" prefHeight="25.0" text="Авторизация LOGIN :" />
+                        <Label fx:id="label_dns" prefHeight="25.0" text="DNS имена :" />
+                        <Label fx:id="label_records" text="Выбрано записей" />
+                        <Label prefHeight="25.0" text="Статус синхронизации" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="bt1" mnemonicParsing="false" onAction="#click_login" prefHeight="25.0" prefWidth="100.0" text="Авторизация" />
+                        <Button fx:id="bt2" mnemonicParsing="false" onAction="#click_dns" prefHeight="45.0" prefWidth="100.0" text="Настройка списка DNS" textAlignment="CENTER" wrapText="true" />
+                        <Label fx:id="status" prefHeight="25.0" prefWidth="100.0" text="Статус" textAlignment="CENTER" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox prefHeight="30.0" prefWidth="400.0">
+               <children>
+                  <CheckBox fx:id="checkBox" mnemonicParsing="false" text="Обновлять автоматически">
+                     <padding>
+                        <Insets right="30.0" />
+                     </padding>
+                  </CheckBox>
+                  <Button fx:id="bt_setip" mnemonicParsing="false" onAction="#click" prefHeight="25.0" prefWidth="200.0" text="Обновить IP" />
+               </children>
+            </HBox>
+            <ProgressBar fx:id="prbar" prefHeight="18.0" prefWidth="400.0" progress="0.0" />
+            <WebView fx:id="webView" prefHeight="1.0" prefWidth="400.0" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

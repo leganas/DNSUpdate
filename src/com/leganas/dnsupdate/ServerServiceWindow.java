@@ -1,13 +1,7 @@
 package com.leganas.dnsupdate;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.leganas.dnsupdate.Assets.Account;
-import com.leganas.dnsupdate.Assets.DNSRecord;
-import com.leganas.dnsupdate.WindowController.Controller;
-import com.leganas.dnsupdate.Assets.DNS;
 import com.leganas.dnsupdate.Assets.DNSList;
+import com.leganas.dnsupdate.WindowController.MainController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -16,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,13 +18,10 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import javax.imageio.ImageIO;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -67,18 +59,17 @@ public class ServerServiceWindow extends Application {
     // format used to display the current time in a tray icon notification.
     private DateFormat timeFormat = SimpleDateFormat.getTimeInstance();
 
-    Controller controller;
+    MainController mainController;
+    Parent root;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.stage = primaryStage;
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(DNS.class, new DNS.DNSConverter());
-        Gson gson = builder.create();
-
         Setting.dnsList = new DNSList();
-//       временное создание списка DNS
+
+        IPAddres = MainController.getCurrentIP();
+
+        //       временное создание списка DNS
 //        Setting.dnsList.list = new ArrayList<>();
 //        Setting.dnsList.list.add(new DNS("legan.by","",true, new ArrayList<DNSRecord>()));
 //        String JsonTest = gson.toJson(Setting.dnsList);
@@ -92,24 +83,8 @@ public class ServerServiceWindow extends Application {
 //        ReadWrite.writeJson("account.json",JsonTest);
 
 
-        try {
-            String newJson2 = ReadWrite.read("account.json");
-            Setting.account = gson.fromJson(newJson2,Account.class);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            String newJson = ReadWrite.read("dnslist.json");
-            Setting.dnsList = gson.fromJson(newJson,DNSList.class);
-        } catch (FileNotFoundException e) {
-            Setting.dnsList.list = new ArrayList<>();
-        } catch (JsonSyntaxException e) {
-            Setting.dnsList.list = new ArrayList<>();
-        }
-
+        Setting.loadAccount();
+        Setting.loadDNSList();
 
         if ("Windows XP".equals(System.getProperty("os.name"))){
             ABS_PATH_TO_JFXWEBKIT_DLL = System.getProperty("user.dir");
@@ -139,12 +114,13 @@ public class ServerServiceWindow extends Application {
 //        Scene scene = new Scene(layout);
 //        scene.setFill(Color.TRANSPARENT);
 //        stage.setScene(scene);
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/sample.fxml"));
-        Parent root = (Parent) loader.load();
-        controller = loader.getController();
-        stage.setTitle("Hello World");
-        stage.setScene(new Scene(root, 1200, 500));
-        controller.setMainStage(stage);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("resources/main.fxml"));
+        root = (Parent) loader.load();
+        mainController = loader.getController();
+        stage.setTitle("DNSUpdate from hoster.by");
+        stage.setScene(new Scene(root, 400, 200));
+        stage.setResizable(false);
+        mainController.setMainStage(stage);
         stage.show();
     }
 
@@ -238,13 +214,15 @@ public class ServerServiceWindow extends Application {
                     new TimerTask() {
                         @Override
                         public void run() {
+                            CheckBox checkBox = (CheckBox) root.lookup("#checkBox");
 
-//                            controller.setCurrentIP(controller.getCurrentIP());
+
+                            if (checkBox.isSelected()) mainController.setCurrentIP(mainController.getCurrentIP());
 
                             javax.swing.SwingUtilities.invokeLater(() ->
                                     trayIcon.displayMessage(
                                             "hello",
-                                            "Current IP " + controller.getCurrentIP(),
+                                            "Current IP " + mainController.getCurrentIP(),
                                             java.awt.TrayIcon.MessageType.INFO));
                         }
                     },
